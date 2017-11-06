@@ -1,48 +1,48 @@
-require "./command"
+require "spec_helper"
 
-describe Command do
+describe CommandValidator do
   let(:text) { "PLACE 1,2,WEST" }
-  let(:command) { Command.new(text) }
+  let(:command_validator) { CommandValidator.new(text) }
 
   describe "initialize" do
     it "contains text" do
-      expect(command.text).to eq(text)
+      expect(command_validator.text).to eq(text)
     end
 
     it "contains a false 'first' boolean" do
-      expect(command.first).to eq(false)
+      expect(command_validator.first).to eq(false)
     end
 
     context "with a 'first' argument" do
       let(:first) { true }
-      let(:command) { Command.new(text, first) }
+      let(:command_validator) { CommandValidator.new(text, first) }
 
       it "contains a 'first' boolean" do
-        expect(command.first).to eq(first)
+        expect(command_validator.first).to eq(first)
       end
     end
 
     it "contains an empty error messages array" do
-      expect(command.error_messages).to eq([])
+      expect(command_validator.error_messages).to eq([])
     end
   end
 
   describe "validate!" do
-    before { command.validate! }
+    before { command_validator.validate! }
 
     context "first is true" do
       let(:first) { true } 
-      let(:command) { Command.new(text, first) }
+      let(:command_validator) { CommandValidator.new(text, first) }
 
       it "finds no errors" do
-        expect(command.error_messages).to eq([])
+        expect(command_validator.error_messages).to eq([])
       end
 
       context "text does not include PLACE" do
         let(:text) { "MOVE" }
 
         it "finds an error" do
-          expect(command.error_messages).to eq([
+          expect(command_validator.error_messages).to eq([
             "The PLACE command needs to be in the following format - PLACE x,y,DIRECTION - where x and y are positive integers and the direction is either NORTH, SOUTH, EAST, or WEST."
           ])
         end
@@ -51,14 +51,14 @@ describe Command do
 
     context "PLACE" do
       it "finds no errors" do
-        expect(command.error_messages).to eq([])
+        expect(command_validator.error_messages).to eq([])
       end
 
       context "improper formatting" do
         let(:text) { "PLACE banana" }
  
         it "finds an error" do
-          expect(command.error_messages).to eq([
+          expect(command_validator.error_messages).to eq([
             "The PLACE command needs to be in the following format - PLACE x,y,DIRECTION - where x and y are positive integers and the direction is either NORTH, SOUTH, EAST, or WEST."
           ])
         end    
@@ -69,7 +69,7 @@ describe Command do
       let(:text) { "MOVE" }
 
       it "finds no errors" do
-        expect(command.error_messages).to eq([])
+        expect(command_validator.error_messages).to eq([])
       end
     end
 
@@ -77,7 +77,7 @@ describe Command do
       let(:text) { "LEFT" }
 
       it "finds no errors" do
-        expect(command.error_messages).to eq([])
+        expect(command_validator.error_messages).to eq([])
       end
     end
 
@@ -85,7 +85,7 @@ describe Command do
       let(:text) { "RIGHT" }
 
       it "finds no errors" do
-        expect(command.error_messages).to eq([])
+        expect(command_validator.error_messages).to eq([])
       end
     end
 
@@ -93,7 +93,7 @@ describe Command do
       let(:text) { "REPORT" }
 
       it "finds no errors" do
-        expect(command.error_messages).to eq([])
+        expect(command_validator.error_messages).to eq([])
       end
     end
   end

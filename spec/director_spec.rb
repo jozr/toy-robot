@@ -1,4 +1,4 @@
-# require "./director"
+# require "spec_helper"
 
 # describe Director do
 #   let(:director) { Director.new }

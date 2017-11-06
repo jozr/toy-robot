@@ -1,4 +1,4 @@
-require "./table"
+require "spec_helper"
 
 describe Table do
   let(:table) { Table.new }

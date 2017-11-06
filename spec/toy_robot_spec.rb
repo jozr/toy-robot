@@ -1,4 +1,4 @@
-require "./toy_robot"
+require "spec_helper"
 
 describe ToyRobot do
   let(:toy_robot) { ToyRobot.new }

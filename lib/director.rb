@@ -1,6 +1,9 @@
-require "./toy_robot"
-require "./table"
-require "./command"
+require_relative 'toy_robot'
+require_relative 'table'
+
+Dir[File.join(File.dirname(__FILE__), "commands/*.rb")].each do |file|
+  require file
+end
 
 class Director
   attr_accessor :toy_robot, :table
@@ -26,7 +29,7 @@ class Director
   private
 
   def handle_order(command_text)
-    command = Command.new(command_text)
+    command = CommandValidator.new(command_text)
     command.validate!
 
     if command.error_messages.empty?
@@ -53,7 +56,7 @@ class Director
   end
 
   def handle_placing(command_text)
-    command = Command.new(command_text, initial=true)
+    command = CommandValidator.new(command_text, initial=true)
     command.validate!
 
     if command.error_messages.empty?

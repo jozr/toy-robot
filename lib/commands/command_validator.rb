@@ -1,4 +1,4 @@
-class Command
+class CommandValidator
   attr_reader :text, :error_messages, :first
 
   def initialize(text, first=false)
