@@ -1,17 +1,17 @@
 class CommandValidator
-  attr_reader :text, :error_messages, :first
+  attr_reader :text, :error_messages, :place
 
-  def initialize(text, first=false)
+  def initialize(text, place=false)
     @text = text
-    @first = first
+    @place = place
     @error_messages = []
   end
 
   def validate!
-    if first || text.include?("PLACE")
+    if place
       validate_placing!
     else
-      validate_single_order!
+      validate_other_orders!
     end
   end
 
@@ -23,7 +23,7 @@ class CommandValidator
     error_messages << improper_formatting_msg
   end
 
-  def validate_single_order!
+  def validate_other_orders!
     return if ["MOVE", "RIGHT", "LEFT", "REPORT"].any? { |ro| ro == text }
 
     error_messages << unrecognized_order_msg    

@@ -9,16 +9,16 @@ describe CommandValidator do
       expect(command_validator.text).to eq(text)
     end
 
-    it "contains a false 'first' boolean" do
-      expect(command_validator.first).to eq(false)
+    it "contains a false 'place' boolean" do
+      expect(command_validator.place).to eq(false)
     end
 
-    context "with a 'first' argument" do
-      let(:first) { true }
-      let(:command_validator) { CommandValidator.new(text, first) }
+    context "with a 'place' argument" do
+      let(:place) { true }
+      let(:command_validator) { CommandValidator.new(text, place) }
 
-      it "contains a 'first' boolean" do
-        expect(command_validator.first).to eq(first)
+      it "contains a 'place' boolean" do
+        expect(command_validator.place).to eq(place)
       end
     end
 
@@ -30,9 +30,9 @@ describe CommandValidator do
   describe "validate!" do
     before { command_validator.validate! }
 
-    context "first is true" do
-      let(:first) { true } 
-      let(:command_validator) { CommandValidator.new(text, first) }
+    context "'place' argument is true" do
+      let(:place) { true } 
+      let(:command_validator) { CommandValidator.new(text, place) }
 
       it "finds no errors" do
         expect(command_validator.error_messages).to eq([])
@@ -46,22 +46,6 @@ describe CommandValidator do
             "The PLACE command needs to be in the following format - PLACE x,y,DIRECTION - where x and y are positive integers and the direction is either NORTH, SOUTH, EAST, or WEST."
           ])
         end
-      end
-    end
-
-    context "PLACE" do
-      it "finds no errors" do
-        expect(command_validator.error_messages).to eq([])
-      end
-
-      context "improper formatting" do
-        let(:text) { "PLACE banana" }
- 
-        it "finds an error" do
-          expect(command_validator.error_messages).to eq([
-            "The PLACE command needs to be in the following format - PLACE x,y,DIRECTION - where x and y are positive integers and the direction is either NORTH, SOUTH, EAST, or WEST."
-          ])
-        end    
       end
     end
 

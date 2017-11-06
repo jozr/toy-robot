@@ -1,18 +1,14 @@
-require_relative 'toy_robot'
-require_relative 'table'
+require_relative "toy_robot"
 
 Dir[File.join(File.dirname(__FILE__), "commands/*.rb")].each do |file|
   require file
 end
 
 class Director
-  attr_accessor :toy_robot, :table
-
-  def initialize
-  end
+  attr_accessor :toy_robot
 
   def input
-    puts "Enter a command..."
+    puts "---------- Enter a command."
     loop do
       command(gets.chomp.upcase)
     end
@@ -34,21 +30,10 @@ class Director
 
     if command.error_messages.empty?
       if command_text.include?("PLACE")
-        handle_placing(command_text)
-      elsif command_text == "MOVE"
-        simulator = toy_robot.dup
-        simulator.move!
-        if valid_position?(simulator.x, simulator.y)
-          toy_robot.move! 
-        else
-          puts "Not that far!"
-        end
+        handle_placing(command_text)  
       else
-        case command_text
-        when "LEFT"   then toy_robot.left!  && "Success!"
-        when "RIGHT"  then toy_robot.right! && "Success!"
-        when "REPORT" then puts toy_robot.position
-        end
+        klass = Module.const_get(command_text.capitalize)
+        klass.new(toy_robot).perform_and_respond!
       end
     else
       puts command.error_messages.first
@@ -56,36 +41,17 @@ class Director
   end
 
   def handle_placing(command_text)
-    command = CommandValidator.new(command_text, initial=true)
+    command = CommandValidator.new(command_text, place=true)
     command.validate!
 
     if command.error_messages.empty?
-      place_robot(command_text)
+      Place.new(toy_robot, command_text).perform_and_respond!
     else
       puts command.error_messages.first
     end
   end
 
-  def place_robot(command_text)
-    command_text.slice!("PLACE ")
-    positions = command_text.split(",")
-
-    toy_robot.place!(
-      positions[0].to_i,
-      positions[1].to_i,
-      positions[2]
-    )
-  end
-
-  def valid_position?(x, y)
-    x.between?(0, table.width_limit) && y.between?(0, table.height_limit)
-  end
-
   def toy_robot
     @toy_robot ||= ToyRobot.new
-  end
-
-  def table
-    @table ||= Table.new
   end
 end
