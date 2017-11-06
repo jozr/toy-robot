@@ -8,17 +8,15 @@ describe Table do
     expect(table.width).to eq(5)
   end
 
-  describe "valid_position?" do
-    it "returns true if both integers are less than 5" do
-      expect(table.valid_position?(4, 4)).to eq(true)
+  describe "height_limit" do
+    it "returns 4" do
+      expect(table.height_limit).to eq(4)
     end
+  end
 
-    it "returns false if x is an integer greater than 4" do
-      expect(table.valid_position?(5, 4)).to eq(false)
-    end
-
-    it "returns false if y is an integer greater than 4" do
-      expect(table.valid_position?(4, 5)).to eq(false)
+  describe "width_limit" do
+    it "returns 4" do
+      expect(table.width_limit).to eq(4)
     end
   end
 end
