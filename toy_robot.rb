@@ -34,8 +34,8 @@ class ToyRobot
     end
   end
 
-  def report
-    "Output: #{x},#{y},#{direction}"
+  def position
+    "#{x},#{y},#{direction}"
   end
 
   def placed?

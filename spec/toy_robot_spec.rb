@@ -139,11 +139,11 @@ describe ToyRobot do
     end
   end
 
-  describe "report" do
+  describe "position" do
     before { toy_robot.place!(x, y, direction) }
 
     it "outputs the position and direction" do
-      expect(toy_robot.report).to eq("Output: #{x},#{y},#{direction}")
+      expect(toy_robot.position).to eq("#{x},#{y},#{direction}")
     end
   end
 

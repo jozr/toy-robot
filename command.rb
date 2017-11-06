@@ -1,5 +1,5 @@
 class Command
-  attr_reader :text, :error_messages, :first, :x, :y, :direction
+  attr_reader :text, :error_messages, :first
 
   def initialize(text, first=false)
     @text = text
@@ -11,14 +11,22 @@ class Command
     if first || text.include?("PLACE")
       validate_placing!
     else
-      error_messages << unrecognized_order_msg unless ["MOVE", "RIGHT", "LEFT", "REPORT"].any? { |ro| ro == text }
+      validate_single_order!
     end
   end
 
   private
 
   def validate_placing!
-    error_messages << improper_formatting_msg unless /PLACE [0-9],[0-9],[(NORTH|SOUTH|EAST|WEST)]/.match(text)
+    return if /PLACE [0-9],[0-9],[(NORTH|SOUTH|EAST|WEST)]/.match(text)
+
+    error_messages << improper_formatting_msg
+  end
+
+  def validate_single_order!
+    return if ["MOVE", "RIGHT", "LEFT", "REPORT"].any? { |ro| ro == text }
+
+    error_messages << unrecognized_order_msg    
   end
 
   def improper_formatting_msg

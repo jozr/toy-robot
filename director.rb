@@ -1,25 +1,85 @@
+require "./toy_robot"
+require "./table"
+require "./command"
+
 class Director
-  VALID_DIRECTIONS = ["WEST", "EAST", "NORTH", "SOUTH"]
+  attr_accessor :toy_robot, :table
 
   def initialize
   end
 
-  def command(command)
-    if initial_command?(command)
-      "great"
+  def input
+    puts "Enter a command..."
+    loop do
+      command(gets.chomp.upcase)
+    end
+  end
+
+  def command(command_text)
+    if toy_robot.placed?
+      handle_order(command_text)
     else
-      "The initial command needs to be in the following form - PLACE x,y,DIRECTION"
+      handle_placing(command_text)
     end
   end
 
   private
 
-  def initial_command?(command)
-    /PLACE [0-9],[0-9],[A-Z]+/.match(command)
+  def handle_order(command_text)
+    command = Command.new(command_text)
+    command.validate!
+
+    if command.error_messages.empty?
+      if command_text.include?("PLACE")
+        handle_placing(command_text)
+      elsif command_text == "MOVE"
+        simulator = toy_robot.dup
+        simulator.move!
+        if valid_position?(simulator.x, simulator.y)
+          toy_robot.move! 
+        else
+          puts "Not that far!"
+        end
+      else
+        case command_text
+        when "LEFT"   then toy_robot.left!  && "Success!"
+        when "RIGHT"  then toy_robot.right! && "Success!"
+        when "REPORT" then puts toy_robot.position
+        end
+      end
+    else
+      puts command.error_messages.first
+    end
   end
 
-  def toy_robot(x, y, direction)
-    @toy_robot ||= ToyRobot.new(x, y, direction)
+  def handle_placing(command_text)
+    command = Command.new(command_text, initial=true)
+    command.validate!
+
+    if command.error_messages.empty?
+      place_robot(command_text)
+    else
+      puts command.error_messages.first
+    end
+  end
+
+  def place_robot(command_text)
+    command_text.slice!("PLACE ")
+    positions = command_text.split(",")
+
+    toy_robot.place!(
+      positions[0].to_i,
+      positions[1].to_i,
+      positions[2]
+    )
+  end
+
+  def valid_position?(x, y)
+    x.between?(0, table.width_limit) && y.between?(0, table.height_limit)
+  end
+
+  def toy_robot
+    @toy_robot ||= ToyRobot.new
   end
 
   def table
