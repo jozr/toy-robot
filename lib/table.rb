@@ -21,6 +21,6 @@ class Table
   end
 
   def zero_based(dimension)
-    dimension - 1 # given that 0 is a valid position
+    dimension - 1 # given that [0,0] is a valid position
   end
 end

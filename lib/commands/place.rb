@@ -1,4 +1,4 @@
-require_relative '../table'
+require_relative "../table"
 
 class Place
   attr_reader :toy_robot, :command_text

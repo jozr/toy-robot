@@ -17,21 +17,13 @@ class ToyRobot
   end
 
   def left!
-    case direction
-    when "NORTH" then @direction = "WEST"
-    when "SOUTH" then @direction = "EAST"
-    when "EAST"  then @direction = "NORTH"
-    when "WEST"  then @direction = "SOUTH"
-    end
+    index = directions.index(direction)
+    @direction = directions[(index - 1) % directions.length]
   end
 
   def right!
-    case direction
-    when "NORTH" then @direction = "EAST"
-    when "SOUTH" then @direction = "WEST"
-    when "EAST"  then @direction = "SOUTH"
-    when "WEST"  then @direction = "NORTH"
-    end
+    index = directions.index(direction)
+    @direction = directions[(index + 1) % directions.length]
   end
 
   def position
@@ -40,5 +32,11 @@ class ToyRobot
 
   def placed?
     !!(x && y && direction)
+  end
+
+  private
+
+  def directions
+    ["NORTH", "EAST", "SOUTH", "WEST"]
   end
 end

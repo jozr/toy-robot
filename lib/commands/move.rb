@@ -1,4 +1,4 @@
-require_relative '../table'
+require_relative "../table"
 
 class Move
   attr_reader :toy_robot

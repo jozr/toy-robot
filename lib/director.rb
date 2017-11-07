@@ -1,4 +1,4 @@
-require_relative "toy_robot"
+require_relative "./toy_robot"
 
 Dir[File.join(File.dirname(__FILE__), "commands/*.rb")].each { |file| require file }
 

@@ -13,12 +13,16 @@ class CommandValidator
   end
 
   def validate_non_placing!
-    return if ["MOVE", "RIGHT", "LEFT", "REPORT"].any? { |ro| ro == text }
+    return if non_placing_commands.any? { |cmd| cmd == text }
 
     error_messages << unrecognized_order_msg    
   end
 
   private
+
+  def non_placing_commands
+    ["MOVE", "RIGHT", "LEFT", "REPORT"]
+  end
 
   def improper_formatting_msg
     "---------- The PLACE command needs to be in the following format - PLACE x,y,DIRECTION."
