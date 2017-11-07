@@ -6,6 +6,12 @@ class Table
     @width = 5
   end
 
+  def valid_position?(x, y)
+    x.between?(0, width_limit) && y.between?(0, height_limit)
+  end
+
+  private
+
   def height_limit
     zero_based(height)
   end
@@ -13,8 +19,6 @@ class Table
   def width_limit
     zero_based(width)
   end
-
-  private
 
   def zero_based(dimension)
     dimension - 1 # given that 0 is a valid position

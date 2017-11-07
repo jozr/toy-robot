@@ -7,7 +7,7 @@ class CommandValidator
   end
 
   def validate_placing!
-    return if /PLACE [0-9],[0-9],[(NORTH|SOUTH|EAST|WEST)]/.match(text)
+    return if /PLACE [0-9],[0-9],(NORTH|SOUTH|EAST|WEST)/.match(text)
 
     error_messages << improper_formatting_msg
   end

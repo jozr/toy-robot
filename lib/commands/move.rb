@@ -10,7 +10,7 @@ class Move
   def perform_and_respond!
     simulator.move!
 
-    if valid_position?(simulator.x, simulator.y)
+    if table.valid_position?(simulator.x, simulator.y)
       toy_robot.move!
       puts "---------- Along it goes..."
     else
@@ -22,10 +22,6 @@ class Move
 
   def simulator
     @simulator ||= toy_robot.dup
-  end
-
-  def valid_position?(x, y)
-    x.between?(0, table.width_limit) && y.between?(0, table.height_limit)
   end
 
   def table

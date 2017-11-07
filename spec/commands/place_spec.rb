@@ -16,5 +16,14 @@ describe Place do
       place.perform_and_respond!
       expect(toy_robot.position).to eq(command_text)
     end
+
+    context "the command is out of bounds" do
+      let(:command_text) { "5,2,WEST" }
+
+      it "does not move the toy robot" do
+        expect($stdout).to receive(:puts).with("---------- Not that far!")
+        place.perform_and_respond!
+      end
+    end
   end
 end

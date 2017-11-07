@@ -8,15 +8,28 @@ describe Table do
     expect(table.width).to eq(5)
   end
 
-  describe "height_limit" do
-    it "returns 4" do
-      expect(table.height_limit).to eq(4)
-    end
-  end
+  describe "valid_position?" do
+    let(:x) { 1 }
+    let(:y) { 1 }
 
-  describe "width_limit" do
-    it "returns 4" do
-      expect(table.width_limit).to eq(4)
+    it "returns true" do
+      expect(table.valid_position?(x, y)).to eq(true)
+    end
+
+    context "x is out of range" do
+      let(:x) { -1 }
+
+      it "returns false" do
+        expect(table.valid_position?(x, y)).to eq(false)
+      end
+    end
+
+    context "y is out of range" do
+      let(:y) { 40 }
+
+      it "returns false" do
+        expect(table.valid_position?(x, y)).to eq(false)
+      end
     end
   end
 end
