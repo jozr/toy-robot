@@ -8,7 +8,6 @@ class Move
   end
 
   def perform_and_respond!
-    simulator = toy_robot.dup
     simulator.move!
 
     if valid_position?(simulator.x, simulator.y)
@@ -20,6 +19,10 @@ class Move
   end
 
   private
+
+  def simulator
+    @simulator ||= toy_robot.dup
+  end
 
   def valid_position?(x, y)
     x.between?(0, table.width_limit) && y.between?(0, table.height_limit)
