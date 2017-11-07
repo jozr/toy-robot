@@ -1,38 +1,38 @@
-# require "spec_helper"
+require "spec_helper"
 
-# describe Director do
-#   let(:director) { Director.new }
+describe Director do
+  let(:placed) { true }
+  let(:toy_robot) { instance_double(ToyRobot, placed?: placed) }
+  let(:command_text) { "foo" }
+  let(:director) { Director.new }
 
-#   it "initializes" do
-#   end
+  before { allow(director).to receive(:toy_robot).and_return(toy_robot) }
 
-#   describe "command()" do
-#     context "PLACE" do
-#       context "valid" do
-#       	let(:command) { "PLACE 1,2,WEST" }
+  describe "command" do
+    it "validates and handles non-placing order" do
+      expect_any_instance_of(CommandValidator).to receive(:validate_non_placing!)
+      expect(director).to receive(:handle_non_placing)
+      director.command(command_text)
+    end
 
-#         it "places the toy robot" do
-#           expect(director.command(command)).to eq("The toy robot was successfully placed at [1,2] facing WEST")
-#         end
-#       end
+    context "text includes PLACE" do
+      let(:command_text) { "PLACE 1,2,WEST" }
 
-#       context "invalid" do
-#       end
-#     end
+      it "validates and handles placing the toy robot" do
+        expect_any_instance_of(CommandValidator).to receive(:validate_placing!)
+        expect(director).to receive(:handle_placing)
+        director.command(command_text)
+      end
+    end
 
-#     context "MOVE" do
-#       context "valid" do
-#         before { director.command("PLACE 1,2,WEST") }
-        
-#         let(:command) { "MOVE" }
+    context "the robot is not placed yet" do
+      let(:command_text) { "PLACE 1,2,WEST" }
 
-#         it "places the toy robot one block forward towards its direction" do
-#           expect(director.command(command)).to eq("The toy robot was successfully placed at [1,2] facing WEST")
-#         end
-#       end
-
-#       context "invalid" do
-#       end
-#     end
-#   end
-# end
+      it "validates and handles placing the toy robot" do
+        expect_any_instance_of(CommandValidator).to receive(:validate_placing!)
+        expect(director).to receive(:handle_placing)
+        director.command(command_text)
+      end
+    end
+  end
+end

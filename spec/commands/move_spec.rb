@@ -23,7 +23,7 @@ describe Move do
       expect(toy_robot.position).to eq("#{x-1},#{y},#{direction}")
     end
 
-    context "the command is out of bounds" do #fix
+    context "the command is out of bounds" do
       let(:simulator) { double(move!: true, x: -1, y: y) }
 
       it "does not move the toy robot" do

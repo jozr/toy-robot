@@ -15,7 +15,7 @@ describe Report do
 
   describe "perform_and_respond!" do
     it "reports the toy robot's position" do
-      expect($stdout).to receive(:puts).with("#{x},#{y},#{direction}")
+      expect($stdout).to receive(:puts).with("---------- #{x},#{y},#{direction}")
       report.perform_and_respond!
     end
   end

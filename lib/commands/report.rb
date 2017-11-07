@@ -6,6 +6,6 @@ class Report
   end
 
   def perform_and_respond!
-    puts toy_robot.position
+    puts "---------- #{toy_robot.position}"
   end
 end

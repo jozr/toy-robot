@@ -1,53 +1,38 @@
 require_relative "toy_robot"
 
-Dir[File.join(File.dirname(__FILE__), "commands/*.rb")].each do |file|
-  require file
-end
+Dir[File.join(File.dirname(__FILE__), "commands/*.rb")].each { |file| require file }
 
 class Director
-  attr_accessor :toy_robot
-
-  def input
-    puts "---------- Enter a command."
-    loop do
-      command(gets.chomp.upcase)
-    end
-  end
-
   def command(command_text)
-    if toy_robot.placed?
-      handle_order(command_text)
+    validator = CommandValidator.new(command_text)
+
+    if !toy_robot.placed? || command_text.include?("PLACE")
+      validator.validate_placing!
+      handle_placing(command_text, validator.error_messages)
     else
-      handle_placing(command_text)
+      validator.validate_non_placing!
+      handle_non_placing(command_text, validator.error_messages)
     end
   end
 
   private
 
-  def handle_order(command_text)
-    command = CommandValidator.new(command_text)
-    command.validate!
+  def handle_placing(text, msgs)
+    bounce_error_messages(msgs) { Place.new(toy_robot, text).perform_and_respond! }
+  end
 
-    if command.error_messages.empty?
-      if command_text.include?("PLACE")
-        handle_placing(command_text)  
-      else
-        klass = Module.const_get(command_text.capitalize)
-        klass.new(toy_robot).perform_and_respond!
-      end
-    else
-      puts command.error_messages.first
+  def handle_non_placing(text, msgs)
+    bounce_error_messages(msgs) do
+      klass = Module.const_get(text.capitalize)
+      klass.new(toy_robot).perform_and_respond!
     end
   end
 
-  def handle_placing(command_text)
-    command = CommandValidator.new(command_text, place=true)
-    command.validate!
-
-    if command.error_messages.empty?
-      Place.new(toy_robot, command_text).perform_and_respond!
+  def bounce_error_messages(msgs)
+    if msgs.empty? 
+      yield
     else
-      puts command.error_messages.first
+      puts msgs.first
     end
   end
 
